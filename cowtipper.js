@@ -608,6 +608,7 @@ jQuery(function() {
           });
   }
 
+  Crafty.mobile = false;
   Crafty.init(640, 480);
   Crafty.canvas.init();
 
