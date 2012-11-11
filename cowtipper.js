@@ -699,11 +699,17 @@ jQuery(function() {
           })
 
           .bind('EnterFrame', function() {
-            this.x -= this.speed;
+            this.x -= this.speed/2;
             if (this.x < 0) {
               Crafty.trigger("gameover");
               Crafty.audio.play("yell", 1, .5);
-              $.cookie("highscore", score, {expires: 365});
+              var previousScore = parseInt($.cookie("highscore"));
+              if (!previousScore) {
+                previousScore = 0;
+              }
+              if (score > previousScore) {
+                $.cookie("highscore", score, {expires: 365});
+              }
               this.destroy();
             };
           })
@@ -750,7 +756,7 @@ jQuery(function() {
         Crafty.e("2D, Canvas, Tween, Color, DOM, Mouse")
           .attr({alpha: 0, x:0, y:0, w:Crafty.viewport.width, h:Crafty.viewport.height, z:60})
           .color("#000000")
-          .tween({alpha: 0.8}, 20);
+          .tween({alpha: 0.8}, 20)
           .timeout(function() {
             Crafty.e("2D, DOM, Text, Tween")
               .attr({x: 10, y:Crafty.viewport.height - 50, w: Crafty.viewport.width-20, alpha: 0, z: 66})
