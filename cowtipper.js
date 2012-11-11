@@ -675,7 +675,7 @@ jQuery(function() {
           .animate("walk", 8, -1)
           .attr({x: Crafty.viewport.width, y: y, z: 4})
 
-          .bind('Click', function() {
+          .bind('MouseDown', function() {
             cowKill += 1;
             if (cowKill > 20) {
               if (cowDelay > 1 && (cowLevel %2 == 0)) cowDelay-=1;
