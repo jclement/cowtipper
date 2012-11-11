@@ -608,10 +608,6 @@ jQuery(function() {
           });
   }
 
-  // Score is shared between scenes
-  var cowLevel = 1;
-  var score = 0;
-
   Crafty.init(640, 480);
   Crafty.canvas.init();
 
@@ -660,8 +656,8 @@ jQuery(function() {
     var cowSpeedRange = 5;
     var cowDelay = 20;
     var cowKill = 0;
-    cowLevel = 1;
-    score = 0;
+    var cowLevel = 1;
+    var score = 0;
 
     Crafty.audio.stop("song1");
     Crafty.audio.play("song2",-1);
@@ -708,7 +704,6 @@ jQuery(function() {
               Crafty.trigger("gameover");
               Crafty.audio.play("yell", 1, .5);
               $.cookie("highscore", score, {expires: 365});
-              load_scene("score", "#ff0000", 20);
               this.destroy();
             };
           })
@@ -748,13 +743,61 @@ jQuery(function() {
                 function() {
                 });
         }
+      })
+      .bind("gameover", function() {
+        this.unbind('EnterFrame');
+
+        Crafty.e("2D, Canvas, Tween, Color, DOM, Mouse")
+          .attr({alpha: 0, x:0, y:0, w:Crafty.viewport.width, h:Crafty.viewport.height, z:60})
+          .color("#000000")
+          .tween({alpha: 0.8}, 20);
+          .timeout(function() {
+            Crafty.e("2D, DOM, Text, Tween")
+              .attr({x: 10, y:Crafty.viewport.height - 50, w: Crafty.viewport.width-20, alpha: 0, z: 66})
+              .tween({alpha: 1}, 50)
+              .css({ 
+                "font-family": "crystal",
+                "font-size": "20pt",
+                "color": "#3333ff",
+                "text-align": "center"
+              })
+              .text("~ Click to Play Again ~");
+            this.bind("Click", function() {
+              load_scene("title", "#ff0000", 20);
+            });
+          }, 700);
+        Crafty.e("2D, DOM, Text, Tween")
+          .attr({x: 10, y:120, w: Crafty.viewport.width-20, alpha: 0, z: 65})
+          .tween({alpha: 1}, 50)
+          .css({ 
+            "font-family": "crystal",
+            "font-size": "60pt",
+            "color": "#ffffff",
+            "text-align": "center"
+          })
+          .text("Game Over!");
+        Crafty.e("2D, DOM, Text, Tween")
+          .attr({x: 10, y:220, w: Crafty.viewport.width-20, alpha: 0, z: 65})
+          .tween({alpha: 1}, 50)
+          .css({ 
+            "font-family": "crystal",
+            "font-size": "20pt",
+            "color": "#ffffff",
+            "text-align": "center"
+          })
+          .text("Level: " + cowLevel);
+        Crafty.e("2D, DOM, Text, Tween")
+          .attr({x: 10, y:260, w: Crafty.viewport.width-20, alpha: 0, z: 65})
+          .tween({alpha: 1}, 50)
+          .css({ 
+            "font-family": "crystal",
+            "font-size": "20pt",
+            "color": "#ffffff",
+            "text-align": "center"
+          })
+          .text("Score: " + score);
       });
 
-  });
-
-  Crafty.scene("score", function() {
-    Crafty.e("2D, DOM, Mouse").attr({x:0, y:0, h:Crafty.viewport.height, w:Crafty.viewport.width })
-      .bind("Click", function() { load_scene("title", "#ffffff", 10);});
   });
 
   Crafty.scene("title", function() {
